@@ -1,0 +1,133 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/vertical_slice.gd" id="1_slice"]
+
+[sub_resource type="Environment" id="Environment_slice"]
+background_mode = 1
+background_color = Color(0.33, 0.55, 0.72, 1)
+ambient_light_source = 3
+ambient_light_color = Color(0.72, 0.78, 0.82, 1)
+ambient_light_energy = 0.65
+
+[sub_resource type="StandardMaterial3D" id="Material_bike"]
+albedo_color = Color(0.84, 0.12, 0.1, 1)
+roughness = 0.72
+
+[sub_resource type="BoxMesh" id="Mesh_bike"]
+material = SubResource("Material_bike")
+size = Vector3(0.68, 0.62, 1.55)
+
+[sub_resource type="StandardMaterial3D" id="Material_rider"]
+albedo_color = Color(0.12, 0.14, 0.18, 1)
+roughness = 0.8
+
+[sub_resource type="CapsuleMesh" id="Mesh_rider"]
+material = SubResource("Material_rider")
+radius = 0.28
+height = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Material_wheel"]
+albedo_color = Color(0.035, 0.04, 0.05, 1)
+roughness = 1.0
+
+[sub_resource type="CylinderMesh" id="Mesh_wheel"]
+material = SubResource("Material_wheel")
+top_radius = 0.31
+bottom_radius = 0.31
+height = 0.16
+radial_segments = 10
+
+[node name="VerticalSlice" type="Node3D"]
+script = ExtResource("1_slice")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_slice")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-48, -28, 0)
+light_energy = 1.1
+shadow_enabled = true
+
+[node name="GeneratedWorld" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="Bike" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="Body" type="MeshInstance3D" parent="Bike"]
+mesh = SubResource("Mesh_bike")
+
+[node name="Rider" type="MeshInstance3D" parent="Bike"]
+position = Vector3(0, 0.67, -0.12)
+rotation_degrees = Vector3(17, 0, 0)
+mesh = SubResource("Mesh_rider")
+
+[node name="FrontWheel" type="MeshInstance3D" parent="Bike"]
+position = Vector3(0, -0.24, 0.62)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_wheel")
+
+[node name="RearWheel" type="MeshInstance3D" parent="Bike"]
+position = Vector3(0, -0.24, -0.62)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("Mesh_wheel")
+
+[node name="ChaseCamera" type="Camera3D" parent="."]
+unique_name_in_owner = true
+current = true
+fov = 58.0
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="TopShade" type="ColorRect" parent="HUD"]
+offset_right = 320.0
+offset_bottom = 42.0
+color = Color(0.015, 0.023, 0.035, 0.82)
+
+[node name="SpeedLabel" type="Label" parent="HUD"]
+unique_name_in_owner = true
+offset_left = 12.0
+offset_top = 7.0
+offset_right = 120.0
+offset_bottom = 29.0
+theme_override_colors/font_color = Color(0.95, 0.75, 0.2, 1)
+theme_override_font_sizes/font_size = 17
+text = "000 km/h"
+
+[node name="StateLabel" type="Label" parent="HUD"]
+unique_name_in_owner = true
+offset_left = 122.0
+offset_top = 6.0
+offset_right = 316.0
+offset_bottom = 38.0
+theme_override_colors/font_color = Color(0.83, 0.89, 0.94, 1)
+theme_override_font_sizes/font_size = 8
+text = "SHURIKEN 400   GEAR 1"
+autowrap_mode = 2
+
+[node name="Controls" type="Label" parent="HUD"]
+offset_left = 8.0
+offset_top = 185.0
+offset_right = 312.0
+offset_bottom = 204.0
+theme_override_colors/font_color = Color(0.92, 0.94, 0.96, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 8
+text = "W/UP accelerate  S/DOWN brake  A/D steer  SHIFT nitro  1/2 bike  R reset"
+horizontal_alignment = 1
+
+[node name="AssumptionLabel" type="Label" parent="HUD"]
+unique_name_in_owner = true
+offset_left = 5.0
+offset_top = 207.0
+offset_right = 315.0
+offset_bottom = 222.0
+theme_override_colors/font_color = Color(0.7, 0.76, 0.8, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 6
+text = "VERIFIED / PROVISIONAL"
+horizontal_alignment = 1

@@ -1,0 +1,6 @@
+[
+  {"name":"positive speed integration","speed":1000,"delta":34,"timestep":5,"reduced_delta":false,"applied_delta":34,"next_speed":1170},
+  {"name":"coast integration","speed":1000,"delta":-5,"timestep":6,"reduced_delta":false,"applied_delta":-5,"next_speed":970},
+  {"name":"negative result clamps to zero","speed":10,"delta":-5,"timestep":5,"reduced_delta":false,"applied_delta":-5,"next_speed":0},
+  {"name":"flagged delta loses one quarter","speed":1000,"delta":34,"timestep":5,"reduced_delta":true,"applied_delta":26,"next_speed":1130}
+]

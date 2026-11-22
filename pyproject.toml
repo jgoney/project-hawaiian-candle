@@ -1,0 +1,50 @@
+[project]
+name = "rr2-rom-tools"
+version = "0.1.0"
+description = "Non-destructive ROM inspection tools for Road Rash II research"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = []
+
+[project.scripts]
+rr2-rom-info = "rr2rom.cli:main"
+rr2-text-dump = "rr2rom.text_cli:main"
+rr2-bike-tuning = "rr2rom.bike_cli:main"
+rr2-ram-capture-info = "rr2rom.capture_cli:main"
+rr2-translate = "rr2port.cli:translate_main"
+rr2-trace-report = "rr2port.cli:report_main"
+rr2-code-report = "rr2port.cli:code_report_main"
+rr2-annotate-indirect = "rr2port.cli:annotate_indirect_main"
+rr2-picture-report = "rr2port.cli:picture_report_main"
+rr2-video-report = "rr2port.cli:video_report_main"
+rr2-ram-writes = "rr2port.cli:ram_writes_main"
+rr2-scene-check = "rr2port.cli:scene_check_main"
+rr2-object-check = "rr2port.cli:object_check_main"
+rr2-extract-art = "rr2port.cli:extract_art_main"
+rr2-fm-compare = "rr2port.fm_compare:main"
+
+[dependency-groups]
+dev = [
+    "pillow>=11",
+    "pytest>=8.4.1",
+    "ruff>=0.12.4",
+]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rr2rom", "src/rr2port"]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

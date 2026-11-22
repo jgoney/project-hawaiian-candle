@@ -1,0 +1,46 @@
+# ROM images and archives (never track source material)
+*.gen
+*.bin
+*.smd
+*.rom
+*.zip
+
+# Ghidra projects and user state
+*.gpr
+*.rep/
+*.gpr.lock
+.ghidra/
+ghidra-projects/
+
+# Generated analysis and bulk dumps
+generated/
+dumps/
+bulk-dumps/
+analysis/generated/
+*.dump
+*.lst
+
+# Python / uv caches and environments
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Godot editor state, exports, and locally extracted copyrighted assets
+.godot/
+godot/builds/
+godot/bin/
+godot/assets/extracted/
+godot/assets/generated/
+godot/captures/
+godot/addons/godot_ai/
+
+# OS and editor files
+.DS_Store
+.idea/
+.vscode/
+*~

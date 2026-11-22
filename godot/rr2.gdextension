@@ -1,0 +1,11 @@
+; The native library is built from the user's ROM by scripts/build-godot-extension.sh
+; and is not part of the repository.
+[configuration]
+
+entry_symbol = "rr2_library_init"
+compatibility_minimum = "4.7"
+
+[libraries]
+
+macos.debug = "res://bin/librr2.dylib"
+macos.release = "res://bin/librr2.dylib"

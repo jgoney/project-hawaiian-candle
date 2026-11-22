@@ -1,0 +1,86 @@
+# Code entry points and jump tables for RR206 that control-flow discovery
+# cannot find by itself. Addresses only; no ROM bytes.
+#
+# How each indirect site was resolved is recorded in analysis/code-discovery.md.
+# [jump_tables] must stay the last section: rr2-annotate-indirect regenerates it.
+
+entries = [
+    # Exception vector targets (verified: analysis/memory-map.md, rr2-rom-info --all-vectors).
+    0x000200, # reset
+    0x001424, 0x001432, 0x001440, 0x00144E, 0x00145C, 0x00146A,
+    0x001478, 0x001486, 0x001494, 0x0014A2, 0x0014B0,
+    0x0014BE, # level 4, HBlank
+    0x0011B8, # level 6, VBlank
+    # Callbacks installed through the frame callback slot 0xFF0300.
+    0x00035A, # boot callback (verified: analysis/initial-findings.md, reset path step 5)
+    0x00E038, # in-race VBlank callback (verified: analysis/bike-physics.md)
+    # Front-end state loop (mechanics verified: analysis/initial-findings.md).
+    0x0CBCC8,
+]
+
+# RAM addresses that hold code pointers. The immediate of any
+# `move.l #imm,<slot>` is code.
+callback_slots = [
+    0xFF0300, # frame callback, called by the VBlank handler at 0x11DC
+    0xFFF97A, # filled from the table at 0x52F8 by the front-end dispatcher at 0xCBDDC
+]
+
+# Routines that take a code pointer in A0 and store it in 0xFFF2C2, from where it
+# is copied to the frame callback slot and jumped to at 0x1420. The immediate of
+# a `movea.l #imm,a0` directly before a call to one of these is code.
+callback_registrars = [0x0011E4, 0x001224]
+
+[[pointer_tables]]
+address = 0x01EEA4
+count = 13
+kind = "long"
+sites = [0x018D6E, 0x018EB4]
+note = "13 code pointers; entry 14 is a small integer, the start of the data that follows"
+
+[[pointer_tables]]
+address = 0x0CC274
+count = 4
+kind = "long"
+sites = [0x0CBDEE]
+note = "front-end state handlers; entry 5 is not a code address and packed data follows"
+
+[[pointer_tables]]
+address = 0x0052F8
+count = 4
+kind = "long"
+note = "parallel to 0xCC274, copied to the callback slot 0xFFF97A; three entries are null"
+
+[[pointer_tables]]
+address = 0x02C418
+count = 28
+kind = "long_offset"
+base = 0x02BCA4
+sites = [0x02C416]
+note = "offsets from 0x2BCA4; entry 29 is the first instruction after the table"
+
+[[pointer_tables]]
+address = 0x02747E
+count = 16
+kind = "long"
+stride = 8
+sites = [0x019D1C]
+note = "16 eight-byte records, pointer first; record 17 does not start with a code address"
+
+[[pointer_tables]]
+address = 0x027546
+count = 154
+kind = "long"
+sites = [0x019A26, 0x019BCC, 0x01F820]
+note = "154 handler pointers used by vehicle behaviour records; unrelated data begins at 0x277AE"
+
+[jump_tables]
+"0011DC" = [0x00035A, 0x001264, 0x0012A6, 0x00135C, 0x0020BA, 0x004D04, 0x008C0A, 0x00E038, 0x0269BC]
+"001420" = [0x004D04, 0x008C0A, 0x0269BC]
+"00E130" = [0x00E134, 0x00E138, 0x00E13C, 0x00E140, 0x00E144, 0x00E148]
+"018D6E" = [0x01AF76, 0x01B016, 0x01B35E]
+"018EB4" = [0x01B3D8]
+"019BCC" = [0x019C00, 0x01F70A]
+"019D1C" = [0x019D22]
+"01F820" = [0x019BD6, 0x019BF6, 0x01F8E4, 0x01F8F4, 0x01F926, 0x01F956, 0x01F95E, 0x01F99A, 0x01F9E8]
+"02C416" = [0x02C8C6, 0x02C8D4, 0x02C8E2, 0x02C8F0, 0x02C90C, 0x02C93C, 0x02C95C, 0x02C96C, 0x02C97C, 0x02C98C, 0x02CA90, 0x02CA9E, 0x02CAC8, 0x02CAE6, 0x02CAF4]
+"0CBDEE" = [0x0CBE74]

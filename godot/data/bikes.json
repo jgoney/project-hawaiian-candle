@@ -1,0 +1,18 @@
+{
+  "shuriken_400": {
+    "display_name": "Shuriken 400",
+    "max_gear": 5,
+    "base_delta": [34, 26, 21, 18, 15, 12],
+    "upper_threshold": [4700, 6200, 7800, 9200, 10400, 12000],
+    "lower_threshold": [0, 5400, 7100, 8400, 9700, 10800],
+    "nitro_parameter": 0
+  },
+  "wild_thing_2000": {
+    "display_name": "Wild Thing 2000",
+    "max_gear": 5,
+    "base_delta": [48, 40, 35, 32, 30, 28],
+    "upper_threshold": [7500, 10000, 12500, 15000, 17500, 20000],
+    "lower_threshold": [0, 8500, 11000, 13500, 16000, 18500],
+    "nitro_parameter": 8
+  }
+}

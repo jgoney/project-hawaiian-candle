@@ -1,0 +1,11 @@
+[
+  {"name":"shuriken gear 0 acceleration","bike":"shuriken_400","speed":0,"gear":0,"accelerating":true,"braking":false,"nitro":false,"delta":34,"next_gear":0},
+  {"name":"shuriken top gear below limiter","bike":"shuriken_400","speed":11999,"gear":5,"accelerating":true,"braking":false,"nitro":false,"delta":12,"next_gear":5},
+  {"name":"shuriken top gear limiter","bike":"shuriken_400","speed":12000,"gear":5,"accelerating":true,"braking":false,"nitro":false,"delta":-5,"next_gear":5},
+  {"name":"ordinary coasting drag","bike":"shuriken_400","speed":8000,"gear":2,"accelerating":false,"braking":false,"nitro":false,"delta":-5,"next_gear":2},
+  {"name":"wild thing clean brake","bike":"wild_thing_2000","speed":8000,"gear":2,"accelerating":false,"braking":true,"nitro":false,"delta":-69,"next_gear":2},
+  {"name":"wild thing gear 0 nitro","bike":"wild_thing_2000","speed":0,"gear":0,"accelerating":true,"braking":false,"nitro":true,"delta":96,"next_gear":0},
+  {"name":"wild thing gear 5 nitro","bike":"wild_thing_2000","speed":20000,"gear":5,"accelerating":true,"braking":false,"nitro":true,"delta":56,"next_gear":5},
+  {"name":"wild thing normal limiter","bike":"wild_thing_2000","speed":20000,"gear":5,"accelerating":true,"braking":false,"nitro":false,"delta":-5,"next_gear":5},
+  {"name":"upshift selects next gear delta","bike":"wild_thing_2000","speed":7500,"gear":0,"accelerating":true,"braking":false,"nitro":false,"delta":40,"next_gear":1}
+]
