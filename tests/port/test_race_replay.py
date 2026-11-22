@@ -703,7 +703,8 @@ def test_fine_objects_prints_counts_and_does_not_change_the_race(race):
     scaled = next(line for line in done.stdout.splitlines() if line.startswith("SCALED "))
     assert f"sampled_back_identical={fields['frames']}" in scaled
     plain = race(None, None)
-    kept = [x for x in done.stdout.splitlines() if not x.startswith(("SCALED ", "FINE_OBJECTS ", "FINE_DASHES "))]
+    skipped = ("SCALED ", "FINE_OBJECTS ", "FINE_DASHES ")
+    kept = [x for x in done.stdout.splitlines() if not x.startswith(skipped)]
     assert kept == plain.stdout.splitlines()
 
 
@@ -721,7 +722,10 @@ def test_inbetween_needs_the_fine_road_and_fine_objects(race):
     assert bare.returncode == 2 and "--scaled-check" in bare.stderr
     no_objects = race(None, None, "--scaled-check", "3", "--inbetween", "blend")
     assert no_objects.returncode == 2 and "--fine-objects" in no_objects.stderr
-    whole = race(None, None, "--scaled-check", "3", "--fine-objects", "--crisp-points", "whole", "--inbetween", "blend")
+    whole = race(
+        None, None, "--scaled-check", "3", "--fine-objects",
+        "--crisp-points", "whole", "--inbetween", "blend"
+    )
     assert whole.returncode == 2 and "--crisp-points fine" in whole.stderr
 
 
@@ -736,7 +740,10 @@ def test_inbetween_check_needs_inbetween(race):
 
 
 def test_inbetween_is_refused_with_resync(race):
-    done = race(None, None, "--resync", "--scaled-check", "3", "--fine-objects", "--inbetween", "blend")
+    done = race(
+        None, None, "--resync", "--scaled-check", "3", "--fine-objects",
+        "--inbetween", "blend"
+    )
     assert done.returncode == 2 and "--resync" in done.stderr
 
 
@@ -747,7 +754,10 @@ def _fields(output: str, name: str) -> dict[str, str]:
 
 def test_inbetween_reports_counts_and_does_not_change_the_race(race):
     for mode in ("predict", "blend", "late"):
-        done = race(None, None, "--scaled-check", "3", "--fine-objects", "--inbetween", mode, "--inbetween-check")
+        done = race(
+            None, None, "--scaled-check", "3", "--fine-objects", "--inbetween",
+            mode, "--inbetween-check"
+        )
         assert done.returncode == 0, done.stdout + done.stderr
         fields = _fields(done.stdout, "INBETWEEN")
         # The synthetic program is not a race: no update is ever noted, nothing is drawn in between.
@@ -759,7 +769,8 @@ def test_inbetween_reports_counts_and_does_not_change_the_race(race):
         assert "edge_still" in _fields(done.stdout, "INBETWEEN_MOTION")
         assert _fields(done.stdout, "INBETWEEN_GUESS")["updates"] == "0"
         plain = race(None, None)
-        kept = [x for x in done.stdout.splitlines() if not x.startswith(("SCALED ", "FINE_OBJECTS ", "FINE_DASHES ", "INBETWEEN"))]
+        skipped = ("SCALED ", "FINE_OBJECTS ", "FINE_DASHES ", "INBETWEEN")
+        kept = [x for x in done.stdout.splitlines() if not x.startswith(skipped)]
         assert kept == plain.stdout.splitlines()
 
 
@@ -771,7 +782,10 @@ def test_inbetween_without_the_check_prints_only_the_counts(race):
 
 def test_inbetween_leaves_a_frame_it_cannot_make_as_it_was(race):
     tmp = race.tmp_path
-    plain = race(None, None, "--scaled-check", "3", "--fine-objects", "--scaled-at", f"0:{tmp / 'plain.ppm'}")
+    plain = race(
+        None, None, "--scaled-check", "3", "--fine-objects", "--scaled-at",
+        f"0:{tmp / 'plain.ppm'}"
+    )
     between = race(None, None, "--scaled-check", "3", "--fine-objects", "--inbetween", "predict",
                    "--scaled-at", f"0:{tmp / 'between.ppm'}")
     assert plain.returncode == 0 and between.returncode == 0, between.stdout + between.stderr
@@ -788,7 +802,8 @@ def test_dashes_check_prints_counts_and_does_not_change_the_race(race):
     assert fields["first_difference"] == "none"
     assert {"covered", "identical", "sprites_after_objects", "dash_sprites"} <= set(fields)
     plain = race(None, None)
-    assert [x for x in done.stdout.splitlines() if not x.startswith("DASHES ")] == plain.stdout.splitlines()
+    kept_lines = [x for x in done.stdout.splitlines() if not x.startswith("DASHES ")]
+    assert kept_lines == plain.stdout.splitlines()
 
 
 def test_dashes_check_is_refused_with_resync(race):
@@ -802,7 +817,10 @@ def test_fine_objects_reports_how_the_dashes_were_drawn(race):
     fields = _fields(done.stdout, "FINE_DASHES")
     # The synthetic program has no road: no frame is drawn with the crisp road, none with strips.
     assert (fields["frames"], fields["strip_frames"], fields["sprite_frames"]) == ("0", "0", "0")
-    between = race(None, None, "--scaled-check", "3", "--fine-objects", "--inbetween", "blend", "--inbetween-check")
+    between = race(
+        None, None, "--scaled-check", "3", "--fine-objects", "--inbetween",
+        "blend", "--inbetween-check"
+    )
     assert between.returncode == 0, between.stdout + between.stderr
     assert _fields(between.stdout, "FINE_DASHES")["strip_frames"] == "0"
     assert {"dash_still", "dash_moving"} <= set(_fields(between.stdout, "INBETWEEN_MOTION"))
@@ -814,7 +832,8 @@ def test_soft_objects_needs_fine_objects_and_does_not_change_the_race(race):
     done = race(None, None, "--scaled-check", "3", "--fine-objects", "--soft-objects")
     assert done.returncode == 0, done.stdout + done.stderr
     plain = race(None, None)
-    kept = [x for x in done.stdout.splitlines() if not x.startswith(("SCALED ", "FINE_OBJECTS ", "FINE_DASHES "))]
+    skipped = ("SCALED ", "FINE_OBJECTS ", "FINE_DASHES ")
+    kept = [x for x in done.stdout.splitlines() if not x.startswith(skipped)]
     assert kept == plain.stdout.splitlines()
 
 

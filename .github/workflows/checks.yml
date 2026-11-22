@@ -1,0 +1,45 @@
+# Builds the port and runs its tests with no ROM: nothing here needs the game.
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    name: tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: C tests
+        run: make -C port test
+      - name: Python tests
+        run: uv run --group dev pytest -q
+      - name: Lint
+        run: uv run --group dev ruff check .
+
+  # Windows is not supported yet: this job shows how far it gets and may fail.
+  windows:
+    name: tests (windows, not yet supported)
+    runs-on: windows-latest
+    continue-on-error: true
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          install: make mingw-w64-ucrt-x86_64-gcc
+      - name: C tests
+        run: make -C port CC=gcc test
