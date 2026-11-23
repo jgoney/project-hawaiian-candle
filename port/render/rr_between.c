@@ -255,12 +255,14 @@ void rr_between_note(RrBetween *b, uint64_t frame, const RrRoadTracker *road,
         rr_between_forget(b);
     } else {
         uint64_t id = objects->age[objects->chosen];
-        if (b->count > 0 && id < b->update[b->count - 1].id) {
+        const RrBetweenUpdate *last = b->count > 0 ? &b->update[b->count - 1] : NULL;
+        if (last != NULL && id < last->id) {
             b->returned++; /* an earlier update is on screen again: not a new one */
-        } else if (b->count == 0 || b->update[b->count - 1].id != id) {
-            if (b->count > 0 && frame - b->update[b->count - 1].stamp > RR_BETWEEN_GAP) rr_between_forget(b);
+        } else if (last == NULL || last->id != id) {
+            /* How long the update before this one was on screen. */
+            uint64_t lasted = b->count > 0 ? frame - b->update[b->count - 1].stamp : 0;
+            if (b->count > 0 && lasted > RR_BETWEEN_GAP) rr_between_forget(b);
             if (b->count > 0) {
-                uint64_t lasted = frame - b->update[b->count - 1].stamp;
                 if (b->lengths == RR_BETWEEN_LENGTHS) {
                     memmove(b->length, b->length + 1, RR_BETWEEN_LENGTHS - 1);
                     b->lengths--;
