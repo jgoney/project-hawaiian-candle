@@ -59,7 +59,11 @@ int main(int argc, char **argv) {
         return 2;
     }
     printf("ok %d\n", set.ok);
-    if (!set.ok) return 0;
+    if (!set.ok) {
+        free(rom);
+        free(ram);
+        return 0;
+    }
     printf("sprites %d %d\n", set.first_sprite, set.sprites);
     printf("tiles %d %d\n", set.first_tile, set.tiles);
     for (int i = 0; i < set.pictures; i++) {
@@ -70,5 +74,7 @@ int main(int argc, char **argv) {
     }
     for (int i = set.first_sprite; i < set.sprites; i++)
         printf("entry %d %d %d\n", i, set.fine.picture[i], set.fine.dx[i]);
+    free(rom);
+    free(ram);
     return 0;
 }
