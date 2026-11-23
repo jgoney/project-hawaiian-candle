@@ -51,7 +51,7 @@ $(BUILD)/test_sound: tests/test_sound.c hw/rr_sound.c hw/rr_sound.h $(SOUND_OBJ)
 
 $(BUILD)/test_console: tests/test_console.c $(CORE_SRC) $(CORE_HDR) $(HW_SRC) $(SOUND_OBJ) $(HW_HDR) $(RENDER_SRC) $(RENDER_HDR) $(HOST_SRC) $(HOST_HDR)
 	@mkdir -p $(BUILD)
-	$(CC) $(CFLAGS) -Icore -Ihw $(SOUND_INC) -Irender -Ihost -o $@ tests/test_console.c $(CORE_SRC) $(HW_SRC) $(SOUND_OBJ) $(RENDER_SRC) $(HOST_SRC)
+	$(CC) $(CFLAGS) -Icore -Ihw $(SOUND_INC) -Irender -Ihost -o $@ tests/test_console.c $(CORE_SRC) $(HW_SRC) $(SOUND_OBJ) $(RENDER_SRC) $(HOST_SRC) -lm
 
 $(BUILD)/test_road: tests/test_road.c $(CORE_HDR) $(HW_HDR) $(RENDER_SRC) $(RENDER_HDR)
 	@mkdir -p $(BUILD)
@@ -132,7 +132,7 @@ $(BUILD)/librr2core.a: $(LIB_OBJ) $(SOUND_OBJ) $(BUILD)/rr206_code.o
 session-replay: $(BUILD)/rr-session-replay
 
 $(BUILD)/rr-session-replay: tools/rr_session_replay.c $(BUILD)/librr2core.a $(HOST_HDR)
-	$(CC) $(CFLAGS) -Ihost -o $@ tools/rr_session_replay.c $(BUILD)/librr2core.a
+	$(CC) $(CFLAGS) -Ihost -o $@ tools/rr_session_replay.c $(BUILD)/librr2core.a -lm
 
 # The Godot native extension. gdextension_interface.h is dumped from the
 # installed Godot by scripts/build-godot-extension.sh. Godot hands out every
@@ -145,7 +145,7 @@ godot-extension: $(GODOT_LIB)
 
 $(GODOT_LIB): host/rr_godot.c $(BUILD)/librr2core.a $(GODOT_HDR_DIR)/gdextension_interface.h
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -Wno-cast-function-type -fPIC -shared -Icore -Ihw -Ihost -I$(GODOT_HDR_DIR) -o $@ host/rr_godot.c $(BUILD)/librr2core.a
+	$(CC) $(CFLAGS) -Wno-cast-function-type -fPIC -shared -Icore -Ihw -Ihost -I$(GODOT_HDR_DIR) -o $@ host/rr_godot.c $(BUILD)/librr2core.a -lm
 
 clean:
 	rm -rf $(BUILD)
